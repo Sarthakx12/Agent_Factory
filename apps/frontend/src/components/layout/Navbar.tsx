@@ -1,53 +1,65 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "Marketplace" },
-  { href: "/publish", label: "Publish" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/", label: "OVERVIEW" },
+  { href: "/agents", label: "MARKETPLACE" },
+  { href: "/publish", label: "PUBLISH" },
+  { href: "/dashboard", label: "DEPLOYMENTS" },
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--grid-line)] bg-[rgba(10,10,18,0.85)] backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-sm font-semibold tracking-[0.22em] text-[var(--neon-cyan)]">
-          AGENTFACTORY
-        </Link>
-        <nav className="hidden gap-5 md:flex">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className="text-xs uppercase tracking-[0.2em] text-[var(--text-primary)] hover:text-[var(--neon-cyan)]">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="hidden md:block">
-          <appkit-button />
-        </div>
-        <button
-          className="md:hidden rounded border border-[var(--grid-line)] p-2"
-          onClick={() => setOpen((value) => !value)}
-          aria-label="Toggle menu"
-        >
-          <Menu size={16} />
-        </button>
-      </div>
-      <div className={cn("md:hidden border-t border-[var(--grid-line)] px-4 pb-3", open ? "block" : "hidden")}>
-        <div className="mb-3 mt-2 flex flex-col gap-2">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className="text-xs uppercase tracking-[0.2em] text-[var(--text-primary)]">
-              {link.label}
-            </Link>
-          ))}
-        </div>
-        <appkit-button />
-      </div>
+    <header style={{
+      position: "sticky",
+      top: 0,
+      zIndex: 40,
+      borderBottom: "1px solid var(--border)",
+      background: "var(--bg)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "16px 48px",
+    }}>
+      <Link href="/" style={{
+        fontFamily: "var(--mono)",
+        fontSize: 13,
+        fontWeight: 600,
+        letterSpacing: "-0.02em",
+        color: "var(--ink)",
+        textDecoration: "none",
+      }}>
+        agent.market
+      </Link>
+
+      <nav style={{ display: "flex", gap: 32 }}>
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            style={{
+              fontFamily: "var(--mono)",
+              fontSize: 10,
+              letterSpacing: "0.1em",
+              color: "var(--muted)",
+              textDecoration: "none",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+
+      <button className="btn-black-pill" style={{ fontSize: 10, padding: "6px 18px" }}>
+        CONNECT
+      </button>
     </header>
   );
 }

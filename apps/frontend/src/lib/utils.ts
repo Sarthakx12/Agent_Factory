@@ -1,8 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+/** Simple class-name joiner that doesn't depend on external packages */
+export function cn(...inputs: (string | boolean | null | undefined)[]) {
+  return inputs.filter(Boolean).join(" ");
 }
 
 export function shortAddress(address?: string) {

@@ -1,8 +1,16 @@
-import { AgentsTable } from "@repo/db/schema";
-import type { InferSelectModel } from "drizzle-orm";
 import type { Agent } from "@/lib/api";
 
-export type AgentRow = InferSelectModel<typeof AgentsTable>;
+// Minimal inline type to avoid @repo/db dependency
+export type AgentRow = {
+  id: number;
+  on_chain_id: string | null;
+  owner: string;
+  storage_path: string;
+  name: string;
+  category: string;
+  price_per_hr: string | number;
+  total_rentals: number;
+};
 
 export function agentRowToDto(row: AgentRow): Agent {
   return {

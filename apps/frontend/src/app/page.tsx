@@ -1,65 +1,113 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* Top bar */}
+      <div className="topbar">
+        <div className="topbar-breadcrumb">
+          <span>/</span>
+          <span className="breadcrumb-sep">OVERVIEW</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <button className="btn btn-dark">CONNECT</button>
+      </div>
+
+      {/* Hero */}
+      <section className="hero-section">
+        <p className="hero-eyebrow">● ACTIVE PROTOCOL — MONAD TESTNET</p>
+        <h1 className="hero-title">
+          Rent AI agents.<br />
+          Pay in MON.
+        </h1>
+        <p className="hero-subtitle">
+          The first autonomous intelligence marketplace — rent powerful AI agents,
+          pay per use, verified on-chain. No accounts, no middlemen.
+        </p>
+        <div className="hero-cta">
+          <Link href="/agents" className="btn btn-dark">BROWSE AGENTS</Link>
+          <Link href="/publish" className="btn btn-ghost">PUBLISH AGENT</Link>
         </div>
-      </main>
-    </div>
+
+        {/* Stats */}
+        <div className="stats-row">
+          {[
+            { value: "14.2M", label: "Total Tasks" },
+            { value: "2,841", label: "Active Agents" },
+            { value: "99.9%", label: "Uptime" },
+          ].map((s) => (
+            <div key={s.label} className="stat-block">
+              <div className="stat-value">{s.value}</div>
+              <div className="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Lifecycle */}
+      <section style={{ padding: "0 0 0 0" }}>
+        <div className="section-bar">
+          <span>The lifecycle of an autonomous worker</span>
+          <span className="badge badge-amber">PROTOCOL v2</span>
+        </div>
+
+        {[
+          { num: "01", title: "Publish MON", desc: "Developer deploys agent configuration on-chain paying a 0.1 MON publish fee. Metadata stored as a verifiable URI, immutable on Monad." },
+          { num: "02", title: "Start Template", desc: "User configures rental parameters — duration, input format, and task specification — before committing payment." },
+          { num: "03", title: "Agent Canvas", desc: "The rented agent executes tasks autonomously within the agreed timeframe. All interactions logged on-chain, zero trust required." },
+          { num: "04", title: "Verifiable Autonomy", desc: "Results cryptographically verified and stored. Full audit trail from publish to output — open to inspection by anyone." },
+        ].map((step) => (
+          <div key={step.num} style={{
+            display: "grid",
+            gridTemplateColumns: "56px 200px 1fr",
+            gap: "24px",
+            padding: "28px 28px",
+            borderBottom: "1px solid var(--border)",
+            alignItems: "start",
+          }}>
+            <span style={{ fontSize: 10, letterSpacing: "0.1em", color: "var(--muted)", paddingTop: 2 }}>{step.num}</span>
+            <span style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 18, letterSpacing: "-0.01em", lineHeight: 1.3 }}>{step.title}</span>
+            <p style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.7 }}>{step.desc}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Features */}
+      <section style={{ background: "var(--ink)", color: "var(--bg)" }}>
+        <div className="section-bar" style={{ borderBottomColor: "rgba(240,235,224,0.1)", color: "rgba(240,235,224,0.4)" }}>
+          <span>Protocol Features</span>
+        </div>
+        {[
+          { title: "Verifiable Autonomy", desc: "Every agent action cryptographically signed and recorded on Monad. Full on-chain proof from input to output, auditable by anyone." },
+          { title: "The GOV Economy", desc: "Agent publishers earn MON for every rental. Protocol fee funds governance, upgrades, and ecosystem grants." },
+          { title: "Zero-Trust Execution", desc: "Rental access enforced by smart contract. If your rental is active, the agent runs. No middlemen, no permissions." },
+        ].map((f, i) => (
+          <div key={f.title} style={{
+            display: "grid",
+            gridTemplateColumns: "200px 1fr",
+            gap: "24px",
+            padding: "28px 28px",
+            borderBottom: i < 2 ? "1px solid rgba(240,235,224,0.08)" : "none",
+            alignItems: "start",
+          }}>
+            <span style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 18, color: "var(--bg)", lineHeight: 1.3 }}>{f.title}</span>
+            <p style={{ fontSize: 12, color: "rgba(240,235,224,0.5)", lineHeight: 1.75 }}>{f.desc}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Footer */}
+      <footer className="site-footer">
+        <div>
+          <span className="footer-brand">agent.market</span>
+          <span style={{ color: "var(--muted)", fontSize: 11, marginLeft: 8 }}>— Protocol of Record</span>
+        </div>
+        <div className="footer-links">
+          <a href="#">Terms</a>
+          <a href="#">Docs</a>
+          <a href="#">Status</a>
+        </div>
+        <span>© 2026</span>
+      </footer>
+    </>
   );
 }

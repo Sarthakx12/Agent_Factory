@@ -1,29 +1,19 @@
+import type { OnChainAgent } from "@/lib/server-contracts";
 import type { Agent } from "@/lib/api";
 
-// Minimal inline type to avoid @repo/db dependency
-export type AgentRow = {
-  id: number;
-  on_chain_id: string | null;
-  owner: string;
-  storage_path: string;
-  name: string;
-  category: string;
-  price_per_hr: string | number;
-  total_rentals: number;
-};
-
-export function agentRowToDto(row: AgentRow): Agent {
+export function onChainAgentToDto(agent: OnChainAgent): Agent {
   return {
-    id: row.id,
-    name: row.name,
-    category: row.category,
-    owner: row.owner,
-    description: undefined,
-    pricePerHour: Number(row.price_per_hr),
-    totalRentals: row.total_rentals,
+    id: agent.id,
+    name: agent.name,
+    category: agent.category,
+    owner: agent.owner,
+    description: agent.description,
+    pricePerHour: Number(agent.pricePerHour),
+    totalRentals: 0, // will be enriched by event logs when needed
     providers: [],
     tools: [],
-    onChainId: row.on_chain_id ?? undefined,
-    storagePath: row.storage_path,
+    onChainId: String(agent.id),
+    storagePath: agent.uri,
+    active: agent.active,
   };
 }

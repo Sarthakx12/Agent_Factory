@@ -3,6 +3,7 @@ import {
   http,
   parseAbi,
   decodeEventLog,
+  formatEther,
   type Hex,
   type Log,
 } from "viem";
@@ -47,6 +48,8 @@ export const escrowAbi = parseAbi([
   "event RentalClaimed(uint256 indexed agentId, address indexed renter, address indexed publisher, uint256 publisherAmount, uint256 platformAmount)",
 ]);
 
+// ──────────────── Agent reads ────────────────
+
 export async function getAgentCount() {
   return publicClient.readContract({
     address: requireFactoryAddress(),
@@ -65,6 +68,78 @@ export async function getOnChainAgent(agentId: bigint) {
   });
 }
 
+/** Parse the on-chain URI string as JSON metadata, with graceful fallback */
+export function parseAgentUri(uri: string): {
+  name?: string;
+  category?: string;
+  description?: string;
+} {
+  try {
+    const parsed = JSON.parse(uri);
+    return {
+      name: parsed.name ?? undefined,
+      category: parsed.category ?? undefined,
+      description: parsed.description ?? undefined,
+    };
+  } catch {
+    // URI is a plain string, not JSON — use it as the name
+    return { name: uri || undefined };
+  }
+}
+
+export type OnChainAgent = {
+  id: number;
+  owner: string;
+  uri: string;
+  name: string;
+  category: string;
+  description?: string;
+  pricePerHour: string; // formatted ether
+  active: boolean;
+};
+
+/** Build a normalised agent object from on-chain data */
+export function formatOnChainAgent(
+  id: number,
+  owner: string,
+  uri: string,
+  pricePerHour: bigint,
+  active: boolean,
+): OnChainAgent {
+  const meta = parseAgentUri(uri);
+  return {
+    id,
+    owner,
+    uri,
+    name: meta.name ?? `Agent #${id}`,
+    category: meta.category ?? "Uncategorized",
+    description: meta.description,
+    pricePerHour: formatEther(pricePerHour),
+    active,
+  };
+}
+
+/** Fetch ALL agents from the factory contract */
+export async function getAllAgents(): Promise<OnChainAgent[]> {
+  const count = await getAgentCount();
+  const total = Number(count);
+  if (total === 0) return [];
+
+  // Parallel fetch all agents (1-indexed)
+  const promises = Array.from({ length: total }, (_, i) =>
+    getOnChainAgent(BigInt(i + 1))
+      .then(([owner, uri, pricePerHour, active]) =>
+        formatOnChainAgent(i + 1, owner, uri, pricePerHour, active),
+      )
+      .catch(() => null),
+  );
+
+  const results = await Promise.all(promises);
+  return results.filter((a): a is OnChainAgent => a !== null);
+}
+
+// ──────────────── Rental reads ────────────────
+
 export async function isRentalActive(agentId: bigint, renter: `0x${string}`) {
   return publicClient.readContract({
     address: requireEscrowAddress(),
@@ -82,6 +157,105 @@ export async function getRentalCost(agentId: bigint, durationHours: bigint) {
     args: [agentId, durationHours],
   });
 }
+
+export async function getRentalInfo(agentId: bigint, renter: `0x${string}`) {
+  return publicClient.readContract({
+    address: requireEscrowAddress(),
+    abi: escrowAbi,
+    functionName: "getRental",
+    args: [agentId, renter],
+  });
+}
+
+// ──────────────── Event log scanning ────────────────
+
+export type RentalEvent = {
+  agentId: number;
+  renter: string;
+  duration: string;
+  payment: string;
+  expiresAt: number; // unix seconds
+  blockNumber: bigint;
+  txHash: string;
+};
+
+export type ClaimEvent = {
+  agentId: number;
+  renter: string;
+  publisher: string;
+  publisherAmount: string;
+  platformAmount: string;
+  blockNumber: bigint;
+  txHash: string;
+};
+
+/** Scan AgentRented events, optionally filtered by agentId */
+export async function getAgentRentedEvents(
+  agentId?: bigint,
+): Promise<RentalEvent[]> {
+  const logs = await publicClient.getLogs({
+    address: requireEscrowAddress(),
+    event: {
+      type: "event",
+      name: "AgentRented",
+      inputs: [
+        { type: "uint256", name: "agentId", indexed: true },
+        { type: "address", name: "renter", indexed: true },
+        { type: "uint256", name: "duration" },
+        { type: "uint256", name: "payment" },
+        { type: "uint256", name: "expiresAt" },
+      ],
+    },
+    args: agentId !== undefined ? { agentId } : undefined,
+    fromBlock: 0n,
+    toBlock: "latest",
+  });
+
+  return logs.map((log) => ({
+    agentId: Number(log.args.agentId!),
+    renter: log.args.renter!,
+    duration: String(log.args.duration!),
+    payment: formatEther(log.args.payment!),
+    expiresAt: Number(log.args.expiresAt!),
+    blockNumber: log.blockNumber,
+    txHash: log.transactionHash,
+  }));
+}
+
+/** Scan AgentRented events filtered by renter address */
+export async function getAgentRentedByUser(
+  renter: `0x${string}`,
+): Promise<RentalEvent[]> {
+  const logs = await publicClient.getLogs({
+    address: requireEscrowAddress(),
+    event: {
+      type: "event",
+      name: "AgentRented",
+      inputs: [
+        { type: "uint256", name: "agentId", indexed: true },
+        { type: "address", name: "renter", indexed: true },
+        { type: "uint256", name: "duration" },
+        { type: "uint256", name: "payment" },
+        { type: "uint256", name: "expiresAt" },
+      ],
+    },
+    args: { renter },
+    fromBlock: 0n,
+    toBlock: "latest",
+  });
+
+  return logs.map((log) => ({
+    agentId: Number(log.args.agentId!),
+    renter: log.args.renter!,
+    duration: String(log.args.duration!),
+    payment: formatEther(log.args.payment!),
+    expiresAt: Number(log.args.expiresAt!),
+    blockNumber: log.blockNumber,
+    txHash: log.transactionHash,
+  }));
+}
+
+// ──────────────── Transaction receipt log parsers ────────────────
 
 function sameAddress(a: string, b: string) {
   return a.toLowerCase() === b.toLowerCase();

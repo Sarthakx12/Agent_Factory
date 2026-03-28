@@ -10,6 +10,7 @@ export type Agent = {
   tools?: string[];
   onChainId?: string;
   storagePath?: string;
+  active?: boolean;
 };
 
 const API_BASE = "/api/v1";
@@ -90,29 +91,24 @@ export async function registerPublishedAgent(body: RegisterPublishBody) {
   });
 }
 
-export type RentalRow = {
-  id: number;
-  agent_id: number | null;
+export type RentalEvent = {
+  agentId: number;
   renter: string;
-  expires_at: string;
-  calls_made: number;
-  tx_hash: string | null;
-  payment_amount?: string | null;
-  claimed: boolean;
-  started_at?: string | null;
-  claim_tx_hash?: string | null;
-  created_at: string;
+  duration: string;
+  payment: string;
+  expiresAt: number;
+  txHash: string;
 };
 
 export async function registerRental(tx_hash: string) {
-  return api<RentalRow>("/agents/rent", {
+  return api<RentalEvent>("/agents/rent", {
     method: "POST",
     body: JSON.stringify({ tx_hash }),
   });
 }
 
 export async function claimRental(agentId: string, tx_hash: string) {
-  return api<RentalRow>(`/agents/${agentId}/claim`, {
+  return api<{ agentId: number; renter: string; publisher: string }>(`/agents/${agentId}/claim`, {
     method: "POST",
     body: JSON.stringify({ tx_hash }),
   });

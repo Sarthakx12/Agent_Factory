@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { db, RentalsTable, AgentsTable } from "@repo/db";
-import { eq, and, gt, sql } from "drizzle-orm";
 import { isRentalActive } from "@/lib/server-contracts";
 
 export async function POST(
@@ -19,24 +17,9 @@ export async function POST(
       return NextResponse.json({ error: "renter is required" }, { status: 400 });
     }
 
-    const agentRows = await db
-      .select()
-      .from(AgentsTable)
-      .where(eq(AgentsTable.id, Number(agent_id)));
-    if (agentRows.length === 0) {
-      return NextResponse.json({ error: "Agent not found" }, { status: 404 });
-    }
-
-    const onChainId = agentRows[0]!.on_chain_id;
-    if (!onChainId) {
-      return NextResponse.json(
-        { error: "Agent has no on-chain ID" },
-        { status: 400 },
-      );
-    }
-
+    // Check on-chain rental status — single source of truth
     const onChainOk = await isRentalActive(
-      BigInt(onChainId),
+      BigInt(agent_id),
       renter as `0x${string}`,
     );
 
@@ -47,30 +30,8 @@ export async function POST(
       );
     }
 
-    const dbRental = await db
-      .select()
-      .from(RentalsTable)
-      .where(
-        and(
-          eq(RentalsTable.agent_id, Number(agent_id)),
-          eq(RentalsTable.renter, renter),
-          gt(RentalsTable.expires_at, new Date()),
-        ),
-      );
-
-    if (dbRental.length === 0) {
-      return NextResponse.json(
-        { error: "No active rental in database" },
-        { status: 403 },
-      );
-    }
-
+    // TODO: plug in real agent execution logic here
     const output = `Agent #${agent_id} processed: "${input}"`;
-
-    await db
-      .update(RentalsTable)
-      .set({ calls_made: sql`${RentalsTable.calls_made} + 1` })
-      .where(eq(RentalsTable.id, dbRental[0]!.id));
 
     return NextResponse.json({ output });
   } catch (e) {

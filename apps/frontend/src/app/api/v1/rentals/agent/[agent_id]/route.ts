@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { db, RentalsTable } from "@repo/db";
-import { eq } from "drizzle-orm";
+import { getAgentRentedEvents } from "@/lib/server-contracts";
 
 export async function GET(
   _req: Request,
@@ -8,10 +7,7 @@ export async function GET(
 ) {
   try {
     const { agent_id } = await context.params;
-    const rentals = await db
-      .select()
-      .from(RentalsTable)
-      .where(eq(RentalsTable.agent_id, Number(agent_id)));
+    const rentals = await getAgentRentedEvents(BigInt(agent_id));
     return NextResponse.json(rentals);
   } catch (e) {
     console.error(e);

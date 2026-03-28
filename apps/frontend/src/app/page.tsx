@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
       {/* Top bar */}

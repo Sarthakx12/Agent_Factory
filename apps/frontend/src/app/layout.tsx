@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
+import { Providers } from "@/components/providers";
+import { RetroToaster } from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
   title: "agent.market — Protocol of Record",
@@ -13,12 +15,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div id="app-shell">
-          <Sidebar />
-          <div className="main-content">
-            {children}
+        <Providers>
+          <div id="app-shell">
+            <Sidebar />
+            <div className="main-content">
+              {children}
+            </div>
           </div>
-        </div>
+          <RetroToaster />
+        </Providers>
       </body>
     </html>
   );

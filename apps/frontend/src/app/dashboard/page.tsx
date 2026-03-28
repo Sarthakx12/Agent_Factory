@@ -44,7 +44,7 @@ export default function DashboardPage() {
           gap: 24,
           marginBottom: 80,
         }}>
-          {rentals.map((r, i) => (
+          {rentals.map((r) => (
             <Link href={`/agents/${r.id}`} key={r.id} style={{ display: "block", textDecoration: "none" }}>
               <div style={{
                 height: "100%",
@@ -105,7 +105,7 @@ export default function DashboardPage() {
           gap: 24,
           marginBottom: 80
         }}>
-          {published.map((a, i) => (
+          {published.map((a) => (
             <Link href={`/agents/${a.id}`} key={a.id} style={{ display: "block", textDecoration: "none" }}>
               <div style={{
                 height: "100%",

@@ -72,7 +72,7 @@ export default function AgentsPage() {
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: 24,
         }}>
-          {filteredAgents.map((agent, i) => (
+          {filteredAgents.map((agent) => (
             <Link href={`/agents/${agent.id}`} key={agent.id} style={{ display: "block", textDecoration: "none" }}>
               <div style={{
                 height: "100%",

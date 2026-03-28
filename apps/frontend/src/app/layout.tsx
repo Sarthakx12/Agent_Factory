@@ -13,11 +13,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="ambient-orbs">
-          <div className="orb orb-1" />
-          <div className="orb orb-2" />
-          <div className="orb orb-3" />
-        </div>
         <div id="app-shell">
           <Sidebar />
           <div className="main-content">

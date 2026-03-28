@@ -8,10 +8,10 @@ const navItems = [
     href: "/agents",
     icon: (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <rect x="1" y="1" width="5" height="5" stroke="currentColor" strokeWidth="1.2" />
-        <rect x="8" y="1" width="5" height="5" stroke="currentColor" strokeWidth="1.2" />
-        <rect x="1" y="8" width="5" height="5" stroke="currentColor" strokeWidth="1.2" />
-        <rect x="8" y="8" width="5" height="5" stroke="currentColor" strokeWidth="1.2" />
+        <rect x="2" y="2" width="4" height="4" stroke="currentColor" strokeWidth="1" />
+        <rect x="8" y="2" width="4" height="4" stroke="currentColor" strokeWidth="1" />
+        <rect x="2" y="8" width="4" height="4" stroke="currentColor" strokeWidth="1" />
+        <rect x="8" y="8" width="4" height="4" stroke="currentColor" strokeWidth="1" />
       </svg>
     ),
   },
@@ -20,7 +20,7 @@ const navItems = [
     href: "/dashboard",
     icon: (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <polygon points="7,1 13,10 1,10" stroke="currentColor" strokeWidth="1.2" fill="none" />
+        <polygon points="7,2 12,10 2,10" stroke="currentColor" strokeWidth="1" fill="none" />
       </svg>
     ),
   },
@@ -29,9 +29,9 @@ const navItems = [
     href: "#",
     icon: (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <rect x="1" y="3" width="12" height="9" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M1 3L4 1H10L13 3" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M5 7H9" stroke="currentColor" strokeWidth="1.2" />
+        <rect x="2" y="4" width="10" height="7" stroke="currentColor" strokeWidth="1" />
+        <path d="M2 4L4 2H10L12 4" stroke="currentColor" strokeWidth="1" />
+        <path d="M5 7H9" stroke="currentColor" strokeWidth="1" />
       </svg>
     ),
   },
@@ -40,9 +40,9 @@ const navItems = [
     href: "#",
     icon: (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <rect x="1" y="1" width="12" height="12" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M4 5L6.5 7L4 9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="square" />
-        <path d="M8 9H10" stroke="currentColor" strokeWidth="1.2" />
+        <rect x="2" y="2" width="10" height="10" stroke="currentColor" strokeWidth="1" />
+        <path d="M4 5L6 7L4 9" stroke="currentColor" strokeWidth="1" strokeLinecap="square" />
+        <path d="M7 9H10" stroke="currentColor" strokeWidth="1" />
       </svg>
     ),
   },
@@ -52,7 +52,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sidebar glass-panel" style={{ borderRight: "1px solid rgba(255,255,255,0.2)" }}>
+    <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
         <div className="logo-diamond" />
@@ -67,7 +67,7 @@ export default function Sidebar() {
             (pathname === item.href || pathname.startsWith(item.href + "/"));
           return (
             <Link
-              key={item.href}
+              key={item.label}
               href={item.href}
               className={`nav-item${isActive ? " active" : ""}`}
             >
@@ -80,19 +80,10 @@ export default function Sidebar() {
 
       {/* User */}
       <div className="sidebar-user">
-        <div className="avatar">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle cx="8" cy="5" r="3" stroke="#F0EBE0" strokeWidth="1.2" />
-            <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="#F0EBE0" strokeWidth="1.2" strokeLinecap="square" />
-          </svg>
-        </div>
-        <div>
-          <p className="user-name">ARCHIVIST_01</p>
-          <p className="user-status">
-            <span className="status-dot" />
-            Connected
-          </p>
-        </div>
+        <p style={{ fontSize: 11, fontWeight: 600, color: "var(--ink)", letterSpacing: "0.05em", marginBottom: 4 }}>ARCHIVIST_01</p>
+        <p style={{ fontSize: 10, color: "var(--muted)", display: "flex", gap: 6, alignItems: "center" }}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4CAF50" }} /> Connected
+        </p>
       </div>
     </aside>
   );

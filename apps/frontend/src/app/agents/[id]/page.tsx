@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 const messages = [
   {
@@ -28,73 +29,65 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", position: "relative" }}>
       {/* Topbar */}
-      <div className="topbar glass-panel" style={{ borderBottom: "1px solid rgba(255,255,255,0.2)", background: "rgba(237, 231, 220, 0.4)" }}>
-        <div className="topbar-breadcrumb">
+      <div className="topbar">
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Link href="/agents" style={{ color: "var(--muted)" }}>MARKETPLACE</Link>
           <span>/</span>
-          <span>DEPLOYMENTS</span>
-          <span className="breadcrumb-sep">/</span>
-          <span>SETH_V4</span>
+          <span style={{ color: "var(--ink)" }}>SETH_V4</span>
         </div>
-        <button className="btn btn-dark">CONNECT</button>
+        <button className="btn-black-pill">CONNECT</button>
       </div>
 
       {/* Main Single Column Layout */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "64px 28px" }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+      <div style={{ flex: 1, overflowY: "auto", padding: "48px 48px 120px" }}>
+        <div style={{ maxWidth: 880, margin: "0 auto" }}>
 
           {/* Status */}
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
-            <span className="badge badge-amber">ACTIVE PROTOCOL</span>
-            <span style={{ fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em" }}>ID: 8821-X</span>
+            <span style={{ padding: "4px 12px", background: "var(--ink)", color: "var(--bg)", borderRadius: 30, fontSize: 10, fontWeight: "bold", letterSpacing: "0.05em", fontFamily: "var(--mono)" }}>ACTIVE PROTOCOL</span>
+            <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>ID: 8821-X</span>
           </div>
 
           {/* Title & Desc */}
-          <h1 className="agent-name" style={{ fontSize: 48, marginBottom: 20 }}>SETH_V4</h1>
-          <p className="agent-desc" style={{ fontSize: 16, lineHeight: 1.7, color: "var(--muted)", marginBottom: 48 }}>
+          <h1 style={{ fontFamily: "var(--serif)", fontSize: 80, marginBottom: 24, fontStyle: "italic", lineHeight: 1, color: "var(--ink)", letterSpacing: "-0.02em" }}>SETH_V4</h1>
+          <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--ink-mid)", marginBottom: 64, maxWidth: 700, fontFamily: "var(--mono)" }}>
             Advanced smart contract auditor and formal verification protocol. Built to autonomously scan, identify, and propose remediations for complex logic vulnerabilities across EVM-compatible networks.
           </p>
 
           {/* Meta Grid */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 32,
-            marginBottom: 56,
-            padding: "32px",
-            background: "rgba(255,255,255,0.3)",
-            borderRadius: 8,
-            border: "1px solid rgba(255,255,255,0.4)"
-          }} className="glass-card">
-            <div>
-              <div className="agent-meta-label">COST PER HR</div>
-              <div style={{ fontSize: 20, fontWeight: 500, fontFamily: "var(--mono)" }}>0.05 MON</div>
-            </div>
-            <div>
-              <div className="agent-meta-label">BUILT BY</div>
-              <div style={{ fontSize: 15, fontFamily: "var(--mono)", color: "var(--ink)" }}>0x7A2c...f9F1</div>
-            </div>
-            <div>
-              <div className="agent-meta-label">TECHNOLOGY</div>
-              <div style={{ fontSize: 15, fontFamily: "var(--mono)", color: "var(--ink)" }}>Slither, Node.js</div>
-            </div>
-            <div>
-              <div className="agent-meta-label">CATEGORY</div>
-              <div style={{ fontSize: 15, fontFamily: "var(--mono)", color: "var(--ink)" }}>ENGINEERING</div>
-            </div>
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 16,
+            marginBottom: 64,
+          }}>
+            {[
+              { label: "COST PER HR", value: "0.05 MON", highlight: true },
+              { label: "BUILT BY", value: "0x7A2c...f9F1" },
+              { label: "TECHNOLOGY", value: "Slither, Node.js" },
+              { label: "CATEGORY", value: "ENGINEERING" }
+            ].map(meta => (
+              <div key={meta.label} style={{ padding: 24, border: "1px solid var(--border)", background: "#fff" }}>
+                <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.05em", marginBottom: 16, fontFamily: "var(--mono)" }}>{meta.label}</div>
+                <div style={{ fontSize: 16, fontFamily: "var(--mono)", color: meta.highlight ? "var(--ink)" : "var(--ink-mid)", fontWeight: meta.highlight ? 600 : 400 }}>{meta.value}</div>
+              </div>
+            ))}
           </div>
 
           {/* Readme */}
-          <div className="glass-panel" style={{ padding: "40px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)" }}>
-            <div className="agent-meta-label" style={{ marginBottom: 24, borderBottom: "1px solid rgba(0,0,0,0.1)", paddingBottom: 12 }}>README.md</div>
-            <div style={{ fontSize: 14, lineHeight: 1.8, fontFamily: "var(--mono)", color: "var(--ink)" }}>
-              <p style={{ marginBottom: 16 }}>SETH_V4 utilizes a combination of static analysis and symbolic execution to detect vulnerabilities.</p>
-              <p style={{ marginBottom: 16, fontWeight: 500 }}>Capabilities:</p>
-              <ul style={{ listStyleType: "square", paddingLeft: 24, marginBottom: 24 }}>
-                <li style={{ marginBottom: 8 }}>Reentrancy detection (Cross-function & cross-contract)</li>
-                <li style={{ marginBottom: 8 }}>Flash loan attack vector simulation</li>
-                <li style={{ marginBottom: 8 }}>Access control mismatch identification</li>
+          <div style={{ padding: 48, border: "1px solid var(--border)", background: "#fff" }}>
+            <div style={{ marginBottom: 32, borderBottom: "1px solid var(--border)", paddingBottom: 16, fontSize: 12, letterSpacing: "0.05em", color: "var(--ink)", fontFamily: "var(--mono)" }}>README.md</div>
+            <div style={{ fontSize: 13, lineHeight: 1.8, fontFamily: "var(--mono)", color: "var(--ink-mid)" }}>
+              <p style={{ marginBottom: 20 }}>SETH_V4 utilizes a combination of static analysis and symbolic execution to detect vulnerabilities.</p>
+              <p style={{ marginBottom: 16, fontSize: 32, fontStyle: "italic", fontFamily: "var(--serif)", color: "var(--ink)" }}>Capabilities.</p>
+              <ul style={{ listStyleType: "square", paddingLeft: 24, marginBottom: 40, gap: 12, display: "flex", flexDirection: "column" }}>
+                <li>Reentrancy detection (Cross-function & cross-contract)</li>
+                <li>Flash loan attack vector simulation</li>
+                <li>Access control mismatch identification</li>
               </ul>
-              <p style={{ color: "var(--muted)" }}>To begin, click the floating terminal icon at the bottom right to open the Execution Playground and provide a compiled contract.</p>
+              <div style={{ padding: "20px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--ink)" }}>
+                To begin, click the black action button at the bottom right to open the Execution Playground and provide a compiled contract.
+              </div>
             </div>
           </div>
 
@@ -103,58 +96,52 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
 
       {/* Floating Chat Widget popup */}
       {isChatOpen && (
-        <div className="glass-card" style={{
+        <div style={{
           position: "fixed",
-          bottom: 100,
-          right: 32,
-          width: 440,
-          height: 600,
-          borderRadius: 8,
-          border: "1px solid rgba(255,255,255,0.4)",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.12)",
+          bottom: 110,
+          right: 48,
+          width: 480,
+          height: 650,
+          border: "1px solid var(--border)",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.1)",
           display: "flex",
           flexDirection: "column",
           zIndex: 100,
-          overflow: "hidden"
+          background: "#fff",
         }}>
           {/* Widget Header */}
-          <div className="section-bar glass-panel" style={{ borderBottom: "1px solid rgba(255,255,255,0.2)", background: "rgba(237, 231, 220, 0.6)", padding: "16px 20px" }}>
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                <rect x="0" y="0" width="12" height="10" rx="1" stroke="currentColor" strokeWidth="1" />
-                <path d="M2 3L4 5L2 7" stroke="currentColor" strokeWidth="1" strokeLinecap="square" />
-                <path d="M6 7H9" stroke="currentColor" strokeWidth="1" />
-              </svg>
+          <div style={{ borderBottom: "1px solid var(--border)", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", color: "var(--ink)", fontSize: 11, letterSpacing: "0.05em", fontFamily: "var(--mono)" }}>
+              <span style={{ width: 8, height: 8, background: "#FF4A3D" }} />
               EXECUTION PLAYGROUND
             </div>
             <button
               onClick={() => setIsChatOpen(false)}
-              style={{ background: "transparent", border: "none", color: "var(--muted)", cursor: "pointer" }}
+              style={{ background: "transparent", border: "none", color: "var(--ink)", cursor: "pointer", fontSize: 16 }}
             >
               ✕
             </button>
           </div>
 
           {/* Widget Chat Area */}
-          <div className="chat-area" style={{ flex: 1, borderBottom: "none", padding: "20px", display: "flex", flexDirection: "column", gap: "24px", overflowY: "auto", background: "rgba(255,255,255,0.15)" }}>
+          <div style={{ flex: 1, padding: 24, display: "flex", flexDirection: "column", gap: 32, overflowY: "auto", background: "var(--bg)" }}>
             {messages.map((msg, i) => (
-              <div key={i} className="chat-msg">
-                <div className="chat-meta" style={{ justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
-                  {msg.role === "agent" && (
-                    <div className="chat-avatar" style={{ width: 20, height: 20 }}>
-                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                        <rect x="2" y="1" width="8" height="7" rx="1" stroke="#F0EBE0" strokeWidth="1" />
-                        <path d="M4 11H8" stroke="#F0EBE0" strokeWidth="1" />
-                        <path d="M6 8V11" stroke="#F0EBE0" strokeWidth="1" />
-                      </svg>
-                    </div>
-                  )}
-                  <span style={{ letterSpacing: "0.08em" }}>{msg.sender}</span>
-                  <span style={{ color: "var(--border-dark)" }}>•</span>
+              <div key={i}>
+                <div style={{ display: "flex", gap: 8, justifyContent: msg.role === "user" ? "flex-end" : "flex-start", marginBottom: 8, color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 10 }}>
+                  <span style={{ fontWeight: 600, color: msg.role === "user" ? "var(--ink)" : "inherit" }}>{msg.sender}</span>
                   <span>{msg.time}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
-                  <div className={`chat-bubble ${msg.role === "agent" ? "chat-bubble-agent" : "chat-bubble-user"}`} style={{ padding: "12px 16px", fontSize: 12 }}>
+                  <div style={{
+                    padding: "16px 20px",
+                    fontSize: 12,
+                    fontFamily: "var(--mono)",
+                    lineHeight: 1.5,
+                    maxWidth: "85%",
+                    background: msg.role === "user" ? "var(--ink)" : "#fff",
+                    color: msg.role === "user" ? "#fff" : "var(--ink)",
+                    border: msg.role === "user" ? "none" : "1px solid var(--border)"
+                  }}>
                     {msg.text}
                   </div>
                 </div>
@@ -163,13 +150,11 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
           </div>
 
           {/* Terminal input */}
-          <div className="terminal-bar glass-panel" style={{ borderTop: "1px solid rgba(0,0,0,0.1)", background: "rgba(237, 231, 220, 0.6)", padding: "0 20px" }}>
-            <div className="terminal-label" style={{ padding: "10px 0 6px" }}>TERMINAL INPUT</div>
+          <div style={{ borderTop: "1px solid var(--border)", padding: "20px 24px" }}>
             <textarea
-              className="terminal-input"
               rows={2}
               placeholder="Enter command or task for the agent..."
-              style={{ padding: "10px 0", fontSize: 12 }}
+              style={{ width: "100%", padding: "12px 16px", fontSize: 12, fontFamily: "var(--mono)", background: "transparent", border: "1px solid var(--border)", outline: "none", resize: "none" }}
             />
           </div>
         </div>
@@ -177,28 +162,26 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
 
       {/* Floating Action Button */}
       <button
-        className="glass-card"
         onClick={() => setIsChatOpen(!isChatOpen)}
         style={{
           position: "fixed",
-          bottom: 32,
-          right: 32,
+          bottom: 48,
+          right: 48,
           width: 56,
           height: 56,
-          borderRadius: "50%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          border: "1px solid rgba(255,255,255,0.6)",
-          boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
+          border: isChatOpen ? "1px solid var(--ink)" : "none",
           cursor: "pointer",
           zIndex: 100,
-          color: "var(--ink)",
-          background: isChatOpen ? "rgba(255,255,255,0.4)" : "var(--panel)"
+          color: isChatOpen ? "var(--ink)" : "var(--bg)",
+          background: isChatOpen ? "var(--bg)" : "var(--ink)",
+          transition: "transform 0.2s",
         }}
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"></path>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">
+          <path d="M21 15v2H7l-4 4V5h14v2"></path>
           <line x1="8" y1="10" x2="16" y2="10"></line>
           <line x1="8" y1="14" x2="12" y2="14"></line>
         </svg>

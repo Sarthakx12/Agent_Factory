@@ -10,149 +10,143 @@ const published = [
   { id: 3, name: "Research\nAgent", agentId: "RSCH_01", tasks: "9,700", earnings: "291 MON", status: "LIVE", category: "CONTENT" },
 ];
 
-function AgentThumb({ name, category }: { name: string, category: string }) {
-  const initials = name.replace(/\n/, " ").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
-  const getGradient = (cat: string) => {
-    switch (cat) {
-      case "DATA": return "linear-gradient(135deg, #E8C09A, #E2DCC8)";
-      case "ENGINEERING": return "linear-gradient(135deg, #A8B5CD, #DCE2EB)";
-      case "CONTENT": return "linear-gradient(135deg, #E6B9B6, #F2E4DF)";
-      default: return "linear-gradient(135deg, #C8D6C1, #E5EBE0)";
-    }
-  };
-
-  return (
-    <div style={{
-      height: 100,
-      background: getGradient(category),
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    }}>
-      <span style={{ color: "rgba(0,0,0,0.6)", fontFamily: "var(--mono)", fontSize: 24, fontWeight: 500, letterSpacing: "0.05em" }}>
-        {initials}
-      </span>
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
-        background: "linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%)"
-      }} />
-    </div>
-  );
-}
-
 export default function DashboardPage() {
   return (
-    <div style={{ minHeight: "100vh" }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* Topbar */}
-      <div className="topbar glass-panel" style={{ borderBottom: "1px solid rgba(255,255,255,0.2)", background: "rgba(237, 231, 220, 0.4)" }}>
-        <div className="topbar-breadcrumb">
+      <div className="topbar">
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span>/</span>
-          <span>DEPLOYMENTS</span>
+          <span style={{ color: "var(--ink)" }}>DEPLOYMENTS</span>
         </div>
-        <button className="btn btn-dark">CONNECT</button>
+        <button className="btn-black-pill">CONNECT</button>
       </div>
 
-      {/* Active Rentals */}
-      <div className="section-bar glass-panel" style={{ borderBottom: "1px solid rgba(255,255,255,0.2)", background: "rgba(237, 231, 220, 0.2)" }}>
-        <span>Active Rentals</span>
-        <Link href="/agents" className="btn btn-ghost" style={{ padding: "5px 12px", fontSize: 10 }}>+ NEW RENTAL</Link>
-      </div>
+      <div style={{ padding: "0 48px 48px", flex: 1, margin: "0 auto", width: "100%", maxWidth: 1400 }}>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-        gap: 24,
-        padding: "32px 28px",
-      }}>
-        {rentals.map((r) => (
-          <Link href={`/agents/${r.id}`} key={r.id} style={{ display: "block", textDecoration: "none" }}>
-            <div className="glass-card" style={{ height: "100%", borderRadius: 4 }}>
-              <AgentThumb name={r.name} category={r.category} />
-              <div style={{ padding: "20px", display: "flex", flexDirection: "column", flex: 1 }}>
+        {/* Active Rentals Header */}
+        <div style={{
+          paddingBottom: 32,
+          marginBottom: 32,
+          borderBottom: "1px solid var(--border)",
+          display: "flex", gap: 24, alignItems: "flex-end", justifyContent: "space-between",
+        }}>
+          <div>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: 48, fontStyle: "italic", lineHeight: 1, marginBottom: 16, color: "var(--ink)" }}>Active Rentals</h2>
+            <p style={{ color: "var(--muted)", fontSize: 11, fontFamily: "var(--mono)", margin: 0 }}>Currently executing or recently expired</p>
+          </div>
+          <Link href="/agents" className="tall-pill-white" style={{ height: 40, width: "auto", padding: "0 24px", borderRadius: 30, textDecoration: "none" }}>+ NEW RENTAL</Link>
+        </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+          gap: 24,
+          marginBottom: 80,
+        }}>
+          {rentals.map((r, i) => (
+            <Link href={`/agents/${r.id}`} key={r.id} style={{ display: "block", textDecoration: "none" }}>
+              <div style={{
+                height: "100%",
+                border: "1px solid var(--border)",
+                padding: 24,
+                display: "flex",
+                flexDirection: "column",
+                background: "#fff",
+                transition: "border-color 0.2s"
+              }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = "var(--ink)"}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = "var(--border)"}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 40 }}>
                   <div>
-                    <div className="agent-meta-label" style={{ marginBottom: 8 }}>{r.agentId} • {r.category}</div>
-                    <div className="agent-name" style={{ marginBottom: 0 }}>{r.name.replace("\n", " ")}</div>
+                    <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.05em", marginBottom: 16 }}>{r.agentId} • {r.category}</div>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 32, fontStyle: "italic", lineHeight: 1.1, color: "var(--ink)" }}>{r.name.replace("\n", " ")}</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <span className={`badge ${r.status === "ACTIVE" ? "badge-amber" : "badge-muted"}`}>
+                    <span style={{ display: "inline-block", padding: "4px 12px", border: `1px solid ${r.status === "ACTIVE" ? "var(--ink)" : "var(--border)"}`, color: r.status === "ACTIVE" ? "var(--ink)" : "var(--muted)", fontSize: 10, fontFamily: "var(--mono)" }}>
                       {r.status}
                     </span>
                   </div>
                 </div>
 
-                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: 16, borderTop: "1px solid var(--border)" }}>
                   <div>
-                    <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>COST</div>
-                    <div style={{ fontSize: 13, fontWeight: 500 }}>{r.cost}</div>
+                    <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4, fontFamily: "var(--mono)" }}>COST</div>
+                    <div style={{ fontSize: 13, fontFamily: "var(--mono)", color: "var(--ink)" }}>{r.cost}</div>
                   </div>
-                  <div style={{ textAlign: "right", fontSize: 10, color: "var(--muted)" }}>
+                  <div style={{ textAlign: "right", fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>
                     {r.status === "ACTIVE" ? `Expires in ${r.expiresIn}` : "Access Expired"}
                   </div>
                 </div>
 
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+            </Link>
+          ))}
+        </div>
 
-      {/* Published Agents */}
-      <div className="section-bar glass-panel" style={{ borderBottom: "1px solid rgba(255,255,255,0.2)", background: "rgba(237, 231, 220, 0.2)", marginTop: 16 }}>
-        <span>Published Agents</span>
-        <Link href="/publish" className="btn btn-ghost" style={{ padding: "5px 12px", fontSize: 10 }}>+ PUBLISH</Link>
-      </div>
+        {/* Published Agents Header */}
+        <div style={{
+          paddingBottom: 32,
+          marginBottom: 32,
+          borderBottom: "1px solid var(--border)",
+          display: "flex", gap: 24, alignItems: "flex-end", justifyContent: "space-between",
+        }}>
+          <div>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: 48, fontStyle: "italic", lineHeight: 1, marginBottom: 16, color: "var(--ink)" }}>Published Agents</h2>
+            <p style={{ color: "var(--muted)", fontSize: 11, fontFamily: "var(--mono)", margin: 0 }}>Agents you are monetizing on the network</p>
+          </div>
+          <Link href="/publish" className="tall-pill-black" style={{ height: 40, width: "auto", padding: "0 24px", borderRadius: 30, textDecoration: "none" }}>+ PUBLISH AGENT</Link>
+        </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-        gap: 24,
-        padding: "32px 28px",
-        marginBottom: 40
-      }}>
-        {published.map((a) => (
-          <Link href={`/agents/${a.id}`} key={a.id} style={{ display: "block", textDecoration: "none" }}>
-            <div className="glass-card" style={{ height: "100%", borderRadius: 4 }}>
-              <AgentThumb name={a.name} category={a.category} />
-              <div style={{ padding: "20px", display: "flex", flexDirection: "column", flex: 1 }}>
-
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+          gap: 24,
+          marginBottom: 80
+        }}>
+          {published.map((a, i) => (
+            <Link href={`/agents/${a.id}`} key={a.id} style={{ display: "block", textDecoration: "none" }}>
+              <div style={{
+                height: "100%",
+                border: "1px solid var(--border)",
+                padding: 24,
+                display: "flex",
+                flexDirection: "column",
+                background: "#fff",
+                transition: "border-color 0.2s"
+              }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = "var(--ink)"}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = "var(--border)"}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 40 }}>
                   <div>
-                    <div className="agent-meta-label" style={{ marginBottom: 8 }}>{a.agentId} • {a.category}</div>
-                    <div className="agent-name" style={{ marginBottom: 0 }}>{a.name.replace("\n", " ")}</div>
+                    <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.05em", marginBottom: 16 }}>{a.agentId} • {a.category}</div>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 32, fontStyle: "italic", lineHeight: 1.1, color: "var(--ink)" }}>{a.name.replace("\n", " ")}</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <span className="badge badge-dark">
+                    <span style={{ display: "inline-block", padding: "4px 12px", border: "1px solid var(--border)", background: "var(--ink)", color: "var(--bg)", fontSize: 10, fontFamily: "var(--mono)" }}>
                       {a.status}
                     </span>
                   </div>
                 </div>
 
-                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: 16, borderTop: "1px solid var(--border)" }}>
                   <div>
-                    <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>EARNINGS</div>
-                    <div style={{ fontSize: 16, fontFamily: "var(--serif)", fontStyle: "italic", fontWeight: 500 }}>{a.earnings}</div>
+                    <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4, fontFamily: "var(--mono)" }}>EARNINGS</div>
+                    <div style={{ fontSize: 16, fontFamily: "var(--mono)", color: "var(--ink)" }}>{a.earnings}</div>
                   </div>
-                  <div style={{ textAlign: "right", fontSize: 10, color: "var(--muted)" }}>
+                  <div style={{ textAlign: "right", fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>
                     {a.tasks} tasks completed
                   </div>
                 </div>
 
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <footer className="site-footer glass-panel" style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}>
-        <span className="footer-brand">agent.market</span>
-        <div className="footer-links">
-          <a href="#">Terms</a><a href="#">Docs</a><a href="#">Status</a>
+            </Link>
+          ))}
         </div>
-        <span>© 2026</span>
-      </footer>
+
+      </div>
     </div>
   );
 }

@@ -1,74 +1,62 @@
 import Link from "next/link";
+import { ConnectButton } from "@/components/ui/ConnectButton";
 
 export default function HomePage() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
+    <div className="home-root">
       {/* Top bar */}
       <div className="topbar">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span>/</span>
           <span style={{ color: "var(--ink)" }}>OVERVIEW</span>
         </div>
-        <button className="btn-black-pill">CONNECT</button>
+        <ConnectButton />
       </div>
 
-      {/* Hero Layout exactly matching the user's uploaded screenshot */}
+      {/* Hero */}
       <div className="home-layout">
 
-        {/* Column 1: Title and Floating Accent Blob */}
+        {/* Column 1: Title */}
         <div className="hero-left">
-          <div className="accent-blob">
-            ● ACTIVE<br />PROTOCOL<br />— MONAD<br />TESTNET
+          <div className="accent-badge">
+            <span className="accent-dot">●</span>
+            ACTIVE PROTOCOL — MONAD TESTNET
           </div>
           <h1 className="giant-text">
-            Rent<br />
-            AI<br />
-            agents.<br />
-            <span className="highlight">
-              Pay in<br />
-              MON.
-            </span>
+            Rent AI agents.<br />
+            <span className="highlight">Pay in MON.</span>
           </h1>
+          <p className="hero-desc-text" style={{ marginTop: 24 }}>
+            The first autonomous intelligence marketplace. Rent powerful AI agents, pay per use, verified on-chain. No accounts. Pure cryptographic autonomy.
+          </p>
         </div>
 
-        {/* Column 2: Desc Text */}
-        <div className="hero-desc-col">
-          <div className="hero-desc-text">
-            The first autonomous<br />intelligence marketplace.<br />Rent powerful AI agents,<br />pay per use, verified on-chain.<br />No accounts, no<br />middlemen. Pure<br />cryptographic autonomy.
+        {/* Divider */}
+        <div className="hero-divider" />
+
+        {/* Column 2: CTAs + Stats */}
+        <div className="hero-right">
+          <div className="pill-row">
+            <Link href="/agents" className="tall-pill-black">
+              <span>BROWSE<br /><br />AGENTS</span>
+            </Link>
+            <Link href="/publish" className="tall-pill-white">
+              <span>PUBLISH<br /><br />AGENT</span>
+            </Link>
           </div>
-        </div>
-
-        {/* Column 3: Black Pill */}
-        <div className="pill-container">
-          <Link href="/agents" style={{ display: "block", height: "100%" }}>
-            <div className="tall-pill-black">
-              <span style={{ display: "block" }}>BROWSE<br /><br />AGENTS</span>
+          <div className="stats-row">
+            <div className="stat-item">
+              <div className="stat-number">14.2M</div>
+              <div className="stat-label">Total Tasks</div>
             </div>
-          </Link>
-        </div>
-
-        {/* Column 4: White Pill */}
-        <div className="pill-container">
-          <Link href="/publish" style={{ display: "block", height: "100%" }}>
-            <div className="tall-pill-white">
-              <span style={{ display: "block" }}>PUBLISH<br /><br />AGENT</span>
+            <div className="stat-item">
+              <div className="stat-number">2,841</div>
+              <div className="stat-label">Active Agents</div>
             </div>
-          </Link>
-        </div>
-
-        {/* Column 5: Stats */}
-        <div className="stats-col">
-          <div>
-            14.2M<br />
-            Total Tasks
-          </div>
-          <div>
-            2,841<br />
-            Active Agents
-          </div>
-          <div>
-            99.9%<br />
-            Uptime
+            <div className="stat-item">
+              <div className="stat-number">99.9%</div>
+              <div className="stat-label">Uptime</div>
+            </div>
           </div>
         </div>
 

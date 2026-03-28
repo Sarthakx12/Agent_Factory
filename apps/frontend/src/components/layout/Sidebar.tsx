@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ConnectButton } from "@/components/ui/ConnectButton";
 
 const navItems = [
   { href: "/", label: "OVERVIEW" },
@@ -40,12 +41,9 @@ export default function Sidebar() {
           <span>●</span>
           <span>MONAD TESTNET</span>
         </div>
-        <button
-          className="btn-black-pill"
-          style={{ width: "100%", marginTop: 12, fontSize: 10 }}
-        >
-          CONNECT WALLET
-        </button>
+        <div style={{ marginTop: 12 }}>
+          <ConnectButton />
+        </div>
       </div>
     </aside>
   );

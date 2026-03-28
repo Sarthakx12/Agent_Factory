@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-void: #0a0a12;
+  --bg-panel: #111122;
+  --neon-cyan: #00f0ff;
+  --neon-amber: #ffaa00;
+  --neon-magenta: #ff00aa;
+  --text-primary: #e0e8f0;
+  --text-dim: #5a6a7a;
+  --grid-line: rgba(0, 240, 255, 0.08);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-void);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-rajdhani);
+  --font-mono: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    radial-gradient(circle at 50% 10%, #1d1d3a, var(--bg-void) 55%);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+  color: var(--text-primary);
+  font-family: var(--font-rajdhani), sans-serif;
+}
+
+.crt-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  opacity: 0.2;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: scanline 12s linear infinite;
+}
+
+.glitch {
+  position: relative;
+  animation: flicker 2.8s infinite;
+}
+
+.typewriter {
+  display: inline-block;
+  white-space: pre-wrap;
+  overflow: hidden;
+  border-right: 2px solid var(--neon-cyan);
+  animation: typewriter 2s steps(24), neonPulse 1.8s infinite;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    max-width: 0;
+  }
+  to {
+    max-width: 100%;
+  }
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.9;
+  }
+  46% {
+    opacity: 0.98;
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(0, 240, 255, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 14px rgba(0, 240, 255, 0.8);
+  }
 }
